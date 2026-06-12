@@ -3,11 +3,11 @@ import os
 
 
 class Settings(BaseSettings):
-    HOST: str
-    PORT: int
-    USER: str
-    PASSWORD: str
-    DATABASE: str
+    DB_HOST: str
+    DB_PORT: int
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_NAME: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
@@ -18,4 +18,4 @@ settings = Settings()
 
 
 def get_db_url():
-    return f'postgresql+asyncpg://{settings.USER}:{settings.PASSWORD}@{settings.HOST}:{settings.PORT}/{settings.DATABASE}'
+    return f'postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}'

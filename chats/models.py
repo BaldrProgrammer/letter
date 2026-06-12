@@ -10,6 +10,8 @@ class Chat(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(64), nullable=False)
+
+    # атрибуты связи
     users = relationship(
         'User', secondary=user_chat, back_populates='chats'
     )

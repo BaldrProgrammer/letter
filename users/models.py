@@ -15,6 +15,7 @@ class User(Base):
     password = Column(String(60), nullable=False)
     profile_photo = Column(String(30), nullable=True)
 
+    # атрибуты связи
     chats = relationship(
         'Chat', secondary=user_chat, back_populates='users'
     )

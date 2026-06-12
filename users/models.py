@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
 from database import Base
+from associations import user_chat
 
 
 class User(Base):
@@ -12,3 +14,7 @@ class User(Base):
     username = Column(String(24), nullable=False, unique=True)
     password = Column(String(60), nullable=False)
     profile_photo = Column(String(30), nullable=True)
+
+    chats = relationship(
+        'Chat', secondary=user_chat, back_populates='users'
+    )

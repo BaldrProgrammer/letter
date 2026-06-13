@@ -1,19 +1,18 @@
 from settings import get_jwt_data
 from jose import jwt
-from passlib.context import CryptContext
+import bcrypt
 
 from datetime import datetime, timedelta
 
 JWT_DATA = get_jwt_data()
-crypt_context = CryptContext('bcrypt')
 
 
 def get_hashed_password(password: str):
-    return crypt_context.hash(password)
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 
 def verify_password(password: str, hashed_password: str):
-    crypt_context.verify(password, hashed_password)
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
 def jwt_encode(data: dict):

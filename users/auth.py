@@ -24,4 +24,6 @@ def jwt_encode(data: dict):
     token = jwt.encode(payload, JWT_DATA['key'], JWT_DATA['algorithm'])
     return token
 
-print(jwt_encode({'user_id': 75432890}))
+
+def jwt_decode(token: str):
+    return jwt.decode(token, JWT_DATA['key'], JWT_DATA['algorithm'])

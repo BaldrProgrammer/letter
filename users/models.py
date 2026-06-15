@@ -25,3 +25,13 @@ class User(Base):
 
     def __repr__(self):
         return str(self)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'username': self.username,
+            'password': self.password,
+            'profile_photo': self.profile_photo
+        }

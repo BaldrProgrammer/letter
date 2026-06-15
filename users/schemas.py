@@ -16,7 +16,7 @@ class SUserReg(BaseModel):
 class SUserGet(BaseModel):
     id: int
     first_name: str
-    last_name: str
+    last_name: str | None
     username: str
     password: str
-    profile_photo: str
+    profile_photo: str | None

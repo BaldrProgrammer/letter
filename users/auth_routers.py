@@ -1,14 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 
-from sqlalchemy import insert
+from sqlalchemy import select, insert
 from sqlalchemy.exc import SQLAlchemyError
 
 from database import session_maker
 from users.models import User
-from users.schemas import SUserReg, SUserGet
+from users.schemas import SUserAuth, SUserReg, SUserGet
 from users.auth import get_hashed_password
 
 router = APIRouter(prefix='/auth', tags=['/auth'])
+
+
+@router.post('/log')
+async def user_reg(response: Response, auth_data: SUserAuth): # -> SUserGet
+    stmt = select(User).where(User.username == auth_data.username)
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        result = result.scalars().one_or_none().to_dict()
+        return SUserGet(**result)
 
 
 @router.post('/reg')

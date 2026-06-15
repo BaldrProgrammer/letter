@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     DB_NAME: str
     JWT_KEY: str
     JWT_ALGORITHM: str
+    EMAIL_ADDRESS: str
+    EMAIL_PASSWORD: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
@@ -25,3 +27,7 @@ def get_db_url():
 
 def get_jwt_data():
     return {'key': settings.JWT_KEY, 'algorithm': settings.JWT_ALGORITHM}
+
+
+def get_email_data():
+    return {'address': settings.EMAIL_ADDRESS, 'password': settings.EMAIL_PASSWORD}

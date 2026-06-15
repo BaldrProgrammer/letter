@@ -11,8 +11,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=True)
+    email = Column(String(80), nullable=False, unique=True)
     username = Column(String(24), nullable=False, unique=True)
-    password = Column(String(60), nullable=False)
+    password = Column(String(60), nullable=True)
     profile_photo = Column(String(30), nullable=True)
 
     # атрибуты связи

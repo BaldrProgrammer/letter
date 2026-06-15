@@ -1,6 +1,8 @@
 from settings import get_jwt_data
 from jose import jwt
 import bcrypt
+import smtplib
+from email.message import EmailMessage
 
 from datetime import datetime, timedelta
 
@@ -26,3 +28,28 @@ def jwt_encode(data: dict):
 
 def jwt_decode(token: str):
     return jwt.decode(token, JWT_DATA['key'], JWT_DATA['algorithm'])
+
+
+'''
+send_email(
+        smtp_host="smtp.gmail.com",
+        smtp_port=465,
+        username="sosnierzbot@gmail.com",
+        password="nnsu nldw bgbb edjr",
+        sender="sosnierzbot@gmail.com",
+        to="boliklevik@gmail.com",
+        subject=f"OTRZYMANO ZGŁOSZENIE PRZEZ TELEGRAM OD {data['name']}",
+        body=tresc
+)
+'''
+
+def send_email(smtp_host, smtp_port, username, password, sender, to, subject, body):
+    msg = EmailMessage()
+    msg["From"] = sender
+    msg["To"] = to
+    msg["Subject"] = subject
+    msg.set_content(body)
+
+    with smtplib.SMTP_SSL(smtp_host, smtp_port) as smtp:
+        smtp.login(username, password)
+        smtp.send_message(msg)

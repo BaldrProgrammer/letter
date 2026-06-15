@@ -19,3 +19,9 @@ class User(Base):
     chats = relationship(
         'Chat', secondary=user_chat, back_populates='users'
     )
+
+    def __str__(self):
+        return f'User(id={self.id},username={self.username})'
+
+    def __repr__(self):
+        return str(self)

@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     JWT_KEY: str
     JWT_ALGORITHM: str
     EMAIL_ADDRESS: str
-    EMAIL_PASSWORD: str
+    EMAIL_PASSCODE: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
@@ -30,4 +30,4 @@ def get_jwt_data():
 
 
 def get_email_data():
-    return {'address': settings.EMAIL_ADDRESS, 'password': settings.EMAIL_PASSWORD}
+    return {'address': settings.EMAIL_ADDRESS, 'passcode': settings.EMAIL_PASSCODE}

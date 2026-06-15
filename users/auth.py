@@ -1,8 +1,9 @@
-from settings import get_jwt_data
+from settings import get_jwt_data, get_email_data
 from jose import jwt
 import bcrypt
 import smtplib
 from email.message import EmailMessage
+import random
 
 from datetime import datetime, timedelta
 
@@ -53,3 +54,22 @@ def send_email(smtp_host, smtp_port, username, password, sender, to, subject, bo
     with smtplib.SMTP_SSL(smtp_host, smtp_port) as smtp:
         smtp.login(username, password)
         smtp.send_message(msg)
+
+
+def send_code(to):
+    email_data = get_email_data()
+    print(email_data)
+    code = random.randint(100_000, 999_999)
+    text = f'Your login code: {code}'
+    send_email(
+        smtp_host="smtp.gmail.com",
+        smtp_port=465,
+        username=email_data['address'],
+        password=email_data['passcode'],
+        sender="sosnierzbot@gmail.com",
+        to=to,
+        subject=f"Auth code for letter",
+        body=text
+    )
+
+    return code

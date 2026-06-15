@@ -31,19 +31,6 @@ def jwt_decode(token: str):
     return jwt.decode(token, JWT_DATA['key'], JWT_DATA['algorithm'])
 
 
-'''
-send_email(
-        smtp_host="smtp.gmail.com",
-        smtp_port=465,
-        username="sosnierzbot@gmail.com",
-        password="nnsu nldw bgbb edjr",
-        sender="sosnierzbot@gmail.com",
-        to="boliklevik@gmail.com",
-        subject=f"OTRZYMANO ZGŁOSZENIE PRZEZ TELEGRAM OD {data['name']}",
-        body=tresc
-)
-'''
-
 def send_email(smtp_host, smtp_port, username, password, sender, to, subject, body):
     msg = EmailMessage()
     msg["From"] = sender

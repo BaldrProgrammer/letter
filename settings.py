@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
     EMAIL_ADDRESS: str
     EMAIL_PASSCODE: str
+    REDIS_URL =
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')

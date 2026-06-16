@@ -1,4 +1,4 @@
-from settings import get_jwt_data, get_email_data
+from settings import settings
 from jose import jwt
 import bcrypt
 import smtplib
@@ -6,8 +6,6 @@ from email.message import EmailMessage
 import random
 
 from datetime import datetime, timedelta
-
-JWT_DATA = get_jwt_data()
 
 
 def get_hashed_password(password: str):
@@ -23,12 +21,12 @@ def jwt_encode(data: dict):
     expire_date = datetime.now() + timedelta(days=30)
     payload.update({'exp': expire_date})
 
-    token = jwt.encode(payload, JWT_DATA['key'], JWT_DATA['algorithm'])
+    token = jwt.encode(payload, settings.JWT_KEY, settings.JWT_ALGORITHM)
     return token
 
 
 def jwt_decode(token: str):
-    return jwt.decode(token, JWT_DATA['key'], JWT_DATA['algorithm'])
+    return jwt.decode(token, settings.JWT_KEY, settings.JWT_ALGORITHM)
 
 
 def send_email(smtp_host, smtp_port, username, password, sender, to, subject, body):
@@ -44,15 +42,13 @@ def send_email(smtp_host, smtp_port, username, password, sender, to, subject, bo
 
 
 def send_code(to):
-    email_data = get_email_data()
-    print(email_data)
     code = random.randint(100_000, 999_999)
     text = f'Your login code: {code}'
     send_email(
         smtp_host="smtp.gmail.com",
         smtp_port=465,
-        username=email_data['address'],
-        password=email_data['passcode'],
+        username=settings.EMAIL_ADDRESS,
+        password=settings.EMAIL_PASSCODE,
         sender="sosnierzbot@gmail.com",
         to=to,
         subject=f"Auth code for letter",

@@ -3,7 +3,9 @@ from fastapi import APIRouter, Response, status, HTTPException
 from sqlalchemy import select, insert
 from sqlalchemy.exc import SQLAlchemyError
 
+from settings import settings
 from database import session_maker
+from cache.redis_object import RedisCacheBackend
 from users.models import User
 from users.schemas import SUserAuth, SUserReg, SUserGet
 from users.auth import verify_password, jwt_encode, send_code
@@ -14,8 +16,9 @@ router = APIRouter(prefix='/auth', tags=['/auth'])
 @router.post('/send_code')
 async def send_code_endpoint(send_to: str):
     code = send_code(send_to)
-    with open('sys/code.txt', 'w') as file:
-        file.write(code)
+    redis = RedisCacheBackend(settings.REDIS_URL, 40)
+    await redis.set(f'{send_to}:code', code)
+    return {'ok': True}
 
 
 @router.post('/log')

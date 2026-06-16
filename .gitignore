@@ -1,0 +1,7 @@
+venv
+__pycache__
+users/__pycache__
+chats/__pycache__
+.idea
+.gitignore
+.env

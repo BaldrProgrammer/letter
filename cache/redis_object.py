@@ -1,5 +1,7 @@
 from redis.asyncio import Redis
 import json
+import asyncio
+from settings import settings
 
 
 class RedisCacheBackend:
@@ -15,3 +17,6 @@ class RedisCacheBackend:
 
     async def delete(self, key: str):
         await self.redis.delete(key)
+
+    async def keys(self):
+        return await self.redis.keys('*')

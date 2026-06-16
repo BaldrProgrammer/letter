@@ -11,30 +11,36 @@ from users.schemas import SUserAuth, SUserReg, SUserGet
 from users.auth import verify_password, jwt_encode, send_code
 
 router = APIRouter(prefix='/auth', tags=['/auth'])
+redis = RedisCacheBackend(settings.REDIS_URL, 60)
 
 
 @router.post('/send_code')
 async def send_code_endpoint(send_to: str):
     code = send_code(send_to)
-    redis = RedisCacheBackend(settings.REDIS_URL, 40)
     await redis.set(f'{send_to}:code', code)
     return {'ok': True}
 
 
-@router.post('/log')
-async def user_log(response: Response, auth_data: SUserAuth):
-    stmt = select(User).where(User.username == auth_data.username)
+@router.post('/check_code')
+async def user_log(response: Response, email: str, code: int, is_login: bool):
+    stmt = select(User).where(User.email == email)
     async with session_maker() as session:
-        result = await session.execute(stmt)
-        result = result.scalars().one_or_none()
-        if result:
-            result_user = SUserGet(**result.to_dict())
-            if verify_password(auth_data.password, result_user.password):
-                response.set_cookie('access_token', jwt_encode({'user_id': result_user.id}))
+        code_from_redis = await redis.get(f'{email}:code')
+        if code_from_redis:
+            if code == int(code_from_redis):
+                if not is_login:
+                    return {'ok': True}
 
-                return {'ok': True, 'access_token': jwt_encode({'user_id': result_user.id})}
+                result = await session.execute(stmt)
+                result = result.scalars().one_or_none()
+                if result:
+                    result_user = SUserGet(**result.to_dict())
+                    response.set_cookie('access_token', jwt_encode({'user_id': result_user.id}))
+                    return {'ok': True, 'access_token': jwt_encode({'user_id': result_user.id})}
 
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='incorrect login or password')
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='email not found')
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='code does not pass')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='code expired or not sent')
 
 
 @router.post('/reg')

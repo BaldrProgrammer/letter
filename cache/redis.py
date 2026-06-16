@@ -1,0 +1,9 @@
+class RedisCacheBackend:
+    def get(self):
+        ...
+
+    def set(self):
+        ...
+
+    def delete(self):
+        ...

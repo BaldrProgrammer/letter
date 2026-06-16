@@ -4,11 +4,11 @@ import json
 
 class RedisCacheBackend:
     def __init__(self, redis_url: str, cache_ttl_seconds: int | None):
-        self.redis = Redis.from_url(redis_url, decoded_responses=True)
+        self.redis = Redis.from_url(redis_url, decode_responses=True)
         self.cache_ttl_seconds = cache_ttl_seconds
 
     async def get(self, key: str):
-        await self.redis.get(key)
+        return await self.redis.get(key)
 
     async def set(self, key: str, value) -> None:
         await self.redis.set(key, json.dumps(value), ex=self.cache_ttl_seconds)

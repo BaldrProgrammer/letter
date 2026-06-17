@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, HTTPException, status
 
 from sqlalchemy import select
+from typing import List
 
 from database import session_maker
 from users.auth import jwt_decode
@@ -8,6 +9,14 @@ from users.models import User
 from users.schemas import SUserGet
 
 router = APIRouter(prefix='/users', tags=['/users'])
+
+
+@router.get('/all')
+async def get_all_users() -> List[SUserGet]:
+    stmt = select(User)
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        return result.scalars().all()
 
 
 @router.get('/current')

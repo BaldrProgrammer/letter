@@ -6,7 +6,7 @@ from typing import List
 from database import session_maker
 from users.auth import jwt_decode
 from users.models import User
-from users.schemas import SUserGet
+from users.schemas import SUserGet, SUserFilters
 
 router = APIRouter(prefix='/users', tags=['/users'])
 
@@ -14,6 +14,14 @@ router = APIRouter(prefix='/users', tags=['/users'])
 @router.get('/all')
 async def get_all_users() -> List[SUserGet]:
     stmt = select(User)
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        return result.scalars().all()
+
+
+@router.post('/by_filter')
+async def get_all_users(filters: SUserFilters) -> List[SUserGet]:
+    stmt = select(User).filter_by(**filters.model_dump(exclude_none=True))
     async with session_maker() as session:
         result = await session.execute(stmt)
         return result.scalars().all()

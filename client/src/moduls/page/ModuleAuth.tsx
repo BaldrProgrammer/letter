@@ -8,6 +8,7 @@ export  default function ModulAuth(){
             display: 'flex',
             justifyContent: 'center',
             alignItems:'center',
+
         }}>
             <MailForm/>
         </Box>

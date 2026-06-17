@@ -3,7 +3,6 @@ from fastapi import APIRouter, Response, status, HTTPException
 from sqlalchemy import select, insert
 from sqlalchemy.exc import SQLAlchemyError
 
-from redis.asyncio import retry
 from settings import settings
 from database import session_maker
 from cache.redis_object import RedisCacheBackend

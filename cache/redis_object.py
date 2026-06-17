@@ -1,7 +1,5 @@
 from redis.asyncio import Redis
 import json
-import asyncio
-from settings import settings
 
 
 class RedisCacheBackend:

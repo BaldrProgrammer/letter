@@ -2,43 +2,43 @@
 import { useRef, useState } from "react";
 import { Box, Input } from "@mui/material";
 
+
 interface InputCodeProps {
     length?: number;
     onComplete: (code: string) => void;
+    onChange: (code: string) => void;
 }
 
-export default function InputCode({ length = 6, onComplete }: InputCodeProps) {
-    // Внутренний массив для раздельного хранения каждой цифры
+export default function InputCode({ length = 6, onComplete, onChange }: InputCodeProps) {
     const [codeArray, setCodeArray] = useState<string[]>(new Array(length).fill(""));
     const inputsRef = useRef<HTMLInputElement[]>([]);
 
     const handleChange = (value: string, index: number) => {
-        // Разрешаем только цифры
         if (/[^0-9]/.test(value)) return;
 
         const newCodeArray = [...codeArray];
-        // Берем только последний введенный символ
         newCodeArray[index] = value.slice(-1);
         setCodeArray(newCodeArray);
 
-        // Если цифра введена, фокус на следующую ячейку
+        const fullCode = newCodeArray.join("");
+        onChange(fullCode);
+
         if (value && index < length - 1) {
             inputsRef.current[index + 1]?.focus();
         }
 
-        // Если заполнили последнюю ячейку, склеиваем код и отдаем наверх
-        const fullCode = newCodeArray.join("");
         if (fullCode.length === length) {
             onComplete(fullCode);
         }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-        // Стирание по Backspace
         if (e.key === "Backspace" && !codeArray[index] && index > 0) {
             const newCodeArray = [...codeArray];
             newCodeArray[index - 1] = "";
             setCodeArray(newCodeArray);
+            onChange(newCodeArray.join(""));
+
             inputsRef.current[index - 1]?.focus();
         }
     };
@@ -49,9 +49,9 @@ export default function InputCode({ length = 6, onComplete }: InputCodeProps) {
                 <Input
                     key={idx}
                     inputRef={(el) => (inputsRef.current[idx] = el)}
-                    value={num} // Индивидуальное значение для КАЖДОЙ ячейки
+                    value={num}
                     onChange={(e) => handleChange(e.target.value, idx)}
-                    onKeyDown={(e:any) => handleKeyDown(e, idx)}
+                    onKeyDown={(e: any) => handleKeyDown(e, idx)}
                     slotProps={{
                         input: {
                             maxLength: 1,

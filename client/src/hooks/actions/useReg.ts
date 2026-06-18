@@ -1,23 +1,22 @@
 import {useState} from "react";
 import {URL} from "@/constant/const";
-import {check_code} from "@/types/actions";
+import {Reg} from "@/types/actions";
 
-export default function useVerifyCode() {
+export default function useReg() {
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState<boolean>(false)
 
-    const post = async (data:check_code) => {
+    const post = async (data:Reg) => {
         setLoading(true)
         try{
-            const response = await fetch(`${URL}/auth/check_code`, {
+            const response = await fetch(`${URL}/auth/reg`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',
                 },
                 body:JSON.stringify({
-                    email:data.email,
-                    code:data.code,
-                    is_login:data.is_Login,
+                    first_name: data.first_name,
+                    last_name:data.last_name,
                 })
             })
 

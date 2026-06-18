@@ -8,7 +8,7 @@ import os
 from database import session_maker
 from users.auth import jwt_decode
 from users.models import User
-from users.schemas import SUserGet, SUserFilters
+from users.schemas import SUserGet
 
 router = APIRouter(prefix='/users', tags=['/users'])
 

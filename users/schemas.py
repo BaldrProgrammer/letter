@@ -30,3 +30,16 @@ class SUserGet(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SSettingGet(BaseModel):
+    id: int
+    user_id: int
+    auth_with_password: bool
+    language: str
+
+
+class SSettingPatch(BaseModel):
+    user_id: int | None = Field(default=None, ge=1)
+    auth_with_password: bool | None = Field(default=None)
+    language: str | None = Field(default=None)

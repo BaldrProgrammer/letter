@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from settings import settings
 from database import session_maker
 from cache.redis_object import RedisCacheBackend
-from users.models import User
+from users.models import User, Setting
 from users.schemas import SEmail, SUserAuth, SUserReg, SUserGet
 from users.auth import jwt_encode, send_code
 
@@ -49,9 +49,15 @@ async def user_reg(user_data: SUserReg) -> dict:
                                last_name=user_data.last_name,
                                email=user_data.email,
                                username=user_data.username,
-                               password=user_data.password)
+                               password=user_data.password).returning(User)
     async with session_maker() as session:
-        await session.execute(stmt)
+        result = await session.execute(stmt)
+        new_settings = Setting(
+            user_id=result.scalars().one().id,
+            auth_with_password=False,
+            language='de'
+        )
+        session.add(new_settings)
         try:
             await session.commit()
         except SQLAlchemyError as e:

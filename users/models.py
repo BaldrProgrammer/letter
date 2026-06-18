@@ -51,10 +51,10 @@ class Setting(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.id'), unique=True)
-    user = relationship('User', back_populates='setting')
-
     auth_with_password = Column(Boolean, default=False)
     language = Column(String(2), default='de')
+
+    user = relationship('User', back_populates='setting')
 
     def __str__(self):
         return f'Setting(id={self.id},user_id={self.user_id})'

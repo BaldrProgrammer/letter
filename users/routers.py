@@ -2,14 +2,15 @@ from fastapi import APIRouter, Request, HTTPException, status, UploadFile
 from fastapi.responses import FileResponse
 
 from sqlalchemy import select, update
+from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
 import os
 
 from database import session_maker
 from users.auth import jwt_decode
-from users.models import User
-from users.schemas import SUserGet
+from users.models import User, Setting
+from users.schemas import SUserGet, SSettingGet, SSettingPatch
 
 router = APIRouter(prefix='/users', tags=['/users'])
 
@@ -61,6 +62,38 @@ async def get_current_user(request: Request) -> SUserGet:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
 
+
+@router.get('/get_settings')
+async def get_chats(user_id: int) -> SSettingGet:
+    stmt = select(User).where(User.id == user_id).options(joinedload(User.setting))
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        result = result.scalars().one_or_none()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+
+        return result.setting
+
+
+@router.patch('/change_setting')
+async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
+    stmt = select(User).where(User.id == user_id).options(joinedload(User.setting))
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        result = result.scalars().one_or_none()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+
+        stmt = update(Setting).where(Setting.id == result.setting.id).values(**new_data.model_dump(exclude_none=True))
+        await session.execute(stmt)
+        try:
+            await session.commit()
+            return {'ok': True, 'new_setting': new_data.model_dump(exclude_none=True)}
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e
+
+
 """
 @router.get('/get_chats')
 async def get_chats(user_id: int):
@@ -74,6 +107,7 @@ async def get_chats(user_id: int):
     chats = result.chats
     print(chats)
 """
+
 
 @router.get('/get_profile_photo')
 async def get_profile_photo(user_id: int) -> FileResponse:

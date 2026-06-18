@@ -61,7 +61,7 @@ async def get_current_user(request: Request) -> SUserGet:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
 
-
+"""
 @router.get('/get_chats')
 async def get_chats(user_id: int):
     stmt = select(User).where(User.id == user_id)
@@ -73,7 +73,7 @@ async def get_chats(user_id: int):
 
     chats = result.chats
     print(chats)
-
+"""
 
 @router.get('/get_profile_photo')
 async def get_profile_photo(user_id: int) -> FileResponse:

@@ -1,48 +1,75 @@
 'use client'
 
-import {Box, Typography} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ButtonLetter from "@/components/Buttons/ButtonLertter";
 import InputCode from "@/components/Inputs/InputCode";
 import useVerifyCode from "@/hooks/actions/useVerifyCode";
-import {useEffect, useState} from "react";
-import { useSearchParams } from "next/navigation";
-import {check_code} from "@/types/actions";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-export default function VerifyCodForm(){
+export default function VerifyCodForm() {
 
-    const [code, setCode] = useState<number>(0)
-    const {post, error, loading} = useVerifyCode()
+    const [email, setEmail] = useState<string>('');
+    const [auth, setAuth] = useState<boolean>(false);
+    const { post, error, loading } = useVerifyCode();
+    const search = useSearchParams();
+    const navigate = useRouter();
 
-    const search = useSearchParams()
+    useEffect(() => {
+        const token = Cookies.get('token');
+        setAuth(!!token);
+        const emailParam = search.get('email');
+        if (emailParam) {
+            setEmail(emailParam);
+        }
+    }, [search]);
 
+    const handleVerify = async (completedCode: string) => {
+        if (!completedCode || completedCode.length !== 6 || loading || !email) return;
 
-    const VerifyCode = (code:string) =>{
-        if(code || loading) return
+        const numericCode = parseInt(completedCode, 10);
+        const success = await post({
+            email: email,
+            code: numericCode,
+            is_Login: auth,
+        });
+        if (success) {
+            console.log("Успешная авторизация/подтверждение!");
+            if (!auth) {
+                navigate.push('/auth/reg');
+            } else {
+                navigate.push('/p/chats');
+            }
+        }
+    };
 
-    }
-
-    return(
+    return (
         <Box
             sx={{
                 height: 600,
                 width: 450,
                 borderRadius: 12,
-                padding:4,
-
-                display:'flex',
+                padding: 4,
+                display: 'flex',
                 flexDirection: 'column',
-
                 border: '1px solid transparent',
                 background: 'linear-gradient(#070707, #070707) padding-box, linear-gradient(135deg, #E5E4E2, #706f6e) border-box',
             }}
         >
-            <Typography>
-
+            <Typography sx={{ color: '#9c9c9b', textAlign: 'center' }} variant={'h4'}>
+                Bestätigung
             </Typography>
-            <InputCode onComplete={VerifyCode} length={6} value={code}/>
+
+            {email && (
+                <Typography sx={{ color: '#666', textAlign: 'center', mt: 1, fontSize: '14px' }}>
+                    Код отправлен на {email}
+                </Typography>
+            )}
+            <InputCode onComplete={handleVerify} length={6} />
             <ButtonLetter>
-                dfgdfgdf
+                {loading ? "Überprüfung..." : "Absenden"}
             </ButtonLetter>
         </Box>
-    )
+    );
 }

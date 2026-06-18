@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Request, HTTPException, status, UploadFile
 from fastapi.responses import FileResponse
 
-from sqlalchemy import select
+from sqlalchemy import select, update
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
 import os
 
@@ -77,6 +78,16 @@ async def set_profile_photo(user_id: int, profile_photo: UploadFile):
     newpath = f'storage/{user_id}/profile_photo.jpg'
     with open(newpath, 'wb') as file:
         file.write(await profile_photo.read())
+
+    stmt = update(User).where(User.id == user_id).values(profile_photo=newpath)
+    async with session_maker() as session:
+        await session.execute(stmt)
+        try:
+            await session.commit()
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e
+
     return {'ok': True, 'newpath': newpath}
 
 

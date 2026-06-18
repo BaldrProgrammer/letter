@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, HTTPException, status, UploadFile
 from fastapi.responses import FileResponse
 
 from sqlalchemy import select, update
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
 import os
@@ -11,6 +11,8 @@ from database import session_maker
 from users.auth import jwt_decode
 from users.models import User, Setting
 from users.schemas import SUserGet, SSettingGet, SSettingPatch
+
+from chats.schemas import SChatGet
 
 router = APIRouter(prefix='/users', tags=['/users'])
 
@@ -94,19 +96,16 @@ async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
             raise e
 
 
-"""
 @router.get('/get_chats')
-async def get_chats(user_id: int):
-    stmt = select(User).where(User.id == user_id)
+async def get_chats(user_id: int) -> List[SChatGet]:
+    stmt = select(User).where(User.id == user_id).options(selectinload(User.chats))
     async with session_maker() as session:
         result = await session.execute(stmt)
         result = result.scalars().one_or_none()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
 
-    chats = result.chats
-    print(chats)
-"""
+    return result.chats
 
 
 @router.get('/get_profile_photo')

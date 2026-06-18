@@ -1,9 +1,12 @@
+'use client'
 import {Box, Button} from "@mui/material";
 import {Input, Typography} from "@mui/material";
 import ButtonLetter from "@/components/Buttons/ButtonLertter";
 import InputLetter from "@/components/Inputs/InputLetter";
+import useMail from "@/hooks/actions/useMail";
 
 export default function MailForm() {
+
     return (
         <Box
             sx={{

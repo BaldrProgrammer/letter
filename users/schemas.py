@@ -19,6 +19,14 @@ class SUserReg(BaseModel):
     password: str | None = Field(min_length=1, max_length=32)
 
 
+class SUserFilters(BaseModel):
+    id: int | None = Field(default=None)
+    first_name: str | None = Field(default=None, min_length=1, max_length=50)
+    last_name: str | None = Field(default=None, min_length=1, max_length=50)
+    email: str | None = Field(default=None, pattern='^[a-zA-Z0-9._%+-]+@gmail\\.com$')
+    username: str | None = Field(default=None, min_length=1, max_length=24)
+
+
 class SUserGet(BaseModel):
     id: int
     first_name: str

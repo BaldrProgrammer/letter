@@ -9,8 +9,8 @@ import os
 
 from database import session_maker
 from users.auth import jwt_decode
-from users.models import User
-from users.schemas import SUserGet, SSettingGet
+from users.models import User, Setting
+from users.schemas import SUserGet, SSettingGet, SSettingPatch
 
 router = APIRouter(prefix='/users', tags=['/users'])
 
@@ -73,6 +73,25 @@ async def get_chats(user_id: int) -> SSettingGet:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
 
         return result.setting
+
+
+@router.patch('/change_setting')
+async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
+    stmt = select(User).where(User.id == user_id).options(joinedload(User.setting))
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        result = result.scalars().one_or_none()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+
+        stmt = update(Setting).where(Setting.id == result.setting.id).values(**new_data.model_dump(exclude_none=True))
+        await session.execute(stmt)
+        try:
+            await session.commit()
+            return {'ok': True, 'new_setting': new_data.model_dump(exclude_none=True)}
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e
 
 
 """

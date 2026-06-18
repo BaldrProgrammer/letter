@@ -2,10 +2,11 @@ import React from "react";
 import {Button} from "@mui/material";
 
 interface ButtonLetterProps{
-    children: React.ReactNode
+    children: React.ReactNode,
+    onClick: () => void
 }
 
-export default function ButtonLetter({children}:ButtonLetterProps) {
+export default function ButtonLetter({children, onClick}:ButtonLetterProps) {
     return(
         <Button
             sx={{
@@ -14,6 +15,7 @@ export default function ButtonLetter({children}:ButtonLetterProps) {
                 color:'#070707',
             }}
             variant={'contained'}
+            onClick={onClick}
         >
             {children}
         </Button>

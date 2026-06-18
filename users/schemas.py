@@ -30,3 +30,10 @@ class SUserGet(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SSettingGet(BaseModel):
+    id: int
+    user_id: int
+    auth_with_password: bool
+    language: str

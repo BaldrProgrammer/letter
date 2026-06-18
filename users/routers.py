@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, HTTPException, status, UploadFile
 from fastapi.responses import FileResponse
 
 from sqlalchemy import select, update
+from sqlalchemy.orm import joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
 import os
@@ -9,7 +10,7 @@ import os
 from database import session_maker
 from users.auth import jwt_decode
 from users.models import User
-from users.schemas import SUserGet
+from users.schemas import SUserGet, SSettingGet
 
 router = APIRouter(prefix='/users', tags=['/users'])
 

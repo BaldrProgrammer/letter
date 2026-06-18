@@ -17,6 +17,8 @@ export default function useReg() {
                 body:JSON.stringify({
                     first_name: data.first_name,
                     last_name:data.last_name,
+                    email:data.email,
+                    username: data.username
                 })
             })
 

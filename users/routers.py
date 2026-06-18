@@ -70,3 +70,11 @@ async def set_profile_photo(user_id, profile_photo: UploadFile):
     with open(newpath, 'wb') as file:
         file.write(await profile_photo.read())
     return {'ok': True, 'newpath': newpath}
+
+
+@router.delete('/delete_profile_photo')
+async def set_profile_photo(user_id: int):
+    if os.path.isfile(f'storage/{user_id}/profile_photo.jpg'):
+        os.remove(f'storage/{user_id}/profile_photo.jpg')
+        return {'ok': True}
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer hat kein Profilbild')

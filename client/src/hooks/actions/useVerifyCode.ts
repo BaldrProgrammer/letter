@@ -8,8 +8,9 @@ export default function useVerifyCode() {
 
     const post = async (data:check_code) => {
         setLoading(true)
+        console.log(data)
         try{
-            const response = await fetch(`${URL}/check_code`, {
+            const response = await fetch(`${URL}/auth/check_code`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',

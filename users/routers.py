@@ -123,7 +123,12 @@ async def get_chats(user_id: int, chat_id: int):
         if not chat:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Chat nicht gefunden')
 
-        print(user, chat)
+        user.chats.append(chat)
+        try:
+            await session.commit()
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e
 
 
 

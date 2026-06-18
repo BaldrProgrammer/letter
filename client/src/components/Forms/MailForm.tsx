@@ -1,7 +1,7 @@
 import {Box, Button} from "@mui/material";
 import {Input, Typography} from "@mui/material";
-import {flexDirection} from "@mui/system";
-
+import ButtonLetter from "@/components/Buttons/ButtonLertter";
+import InputLetter from "@/components/Inputs/InputLetter";
 
 export default function MailForm() {
     return (
@@ -10,8 +10,8 @@ export default function MailForm() {
                 height: 600,
                 width: 450,
                 borderRadius: 12,
-                pading:2,
-                overflow: 'hidden',
+                padding:4,
+
                 display:'flex',
                 flexDirection: 'column',
 
@@ -20,19 +20,15 @@ export default function MailForm() {
             }}
         >
             <Typography
-              sx={{color:'#E5E4E2', textAlign:'center'}}
+              sx={{color:'#9c9c9b', textAlign:'center'}}
               variant={'h4'}
             >
                 Mailformular
             </Typography>
-            <Input />
-            <Button
-                sx={{
-
-                }}
-            >
-                Получить код
-            </Button>
+            <InputLetter id={'1'} placeholder={'ein E-Mail-Adresse'}/>
+            <ButtonLetter>
+                Code erhalten
+            </ButtonLetter>
         </Box>
     );
 }

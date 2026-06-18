@@ -7,7 +7,14 @@ interface ButtonLetterProps{
 
 export default function ButtonLetter({children}:ButtonLetterProps) {
     return(
-        <Button>
+        <Button
+            sx={{
+                borderRadius:'14px',
+                background:'#f8f8f7',
+                color:'#070707',
+            }}
+            variant={'contained'}
+        >
             {children}
         </Button>
     )

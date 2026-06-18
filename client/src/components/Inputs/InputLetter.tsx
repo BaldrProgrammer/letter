@@ -1,8 +1,7 @@
-import React, { ReactNode } from 'react'
-import { Box, TextField, Typography, useTheme, SxProps, Theme } from "@mui/material";
+import React, { ReactNode } from 'react';
+import { Box, Typography, SxProps, Theme } from "@mui/material";
 
-
-interface InputLetterProps{
+interface InputLetterProps {
     value?: string;
     label?: string;
     id: string;
@@ -14,33 +13,68 @@ interface InputLetterProps{
     helperText?: ReactNode | string;
     required?: boolean;
     disabled?: boolean;
-    type: string;
-    compact?: boolean;
-
 }
 
-export default function InputLetter({value, label, id, onChange, onBlur, sx, placeholder, error, helperText, required, type}:InputLetterProps){
-    return(
-        <Box>
-            {label && (<Typography>
-                {label}
-                {required ? ' *' : ''}
-            </Typography>)}
-            <TextField
-                fullWidth
+export default function InputLetter({
+                                        value,
+                                        label,
+                                        id,
+                                        onChange,
+                                        onBlur,
+                                        sx,
+                                        placeholder,
+                                        error,
+                                        helperText,
+                                        required,
+                                        disabled
+                                    }: InputLetterProps) {
+
+
+    const gradient = error
+        ? 'linear-gradient(to right,#9c9c9b, #706f6e)'
+        : 'linear-gradient(to right,#9c9c9b, #706f6e)';
+
+    return (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, ...sx }}>
+            {label && (
+                <Typography component="label" htmlFor={id} variant="body2" sx={{ mb: 0.5 }}>
+                    {label} {required && '*'}
+                </Typography>
+            )}
+
+            <input
                 id={id}
-                size="small"
-                variant="outlined"
-                hiddenLabel
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
                 placeholder={placeholder}
-                error={error}
-                helperText={helperText}
                 required={required}
-                type={type}
+                disabled={disabled}
+                style={{
+                    padding: '8px 12px',
+                    fontSize: '16px',
+                    height:'45px',
+                    outline: 'none',
+                    borderRadius: '16px',
+
+                    border: '1px solid transparent',
+                    backgroundImage: `linear-gradient(#070707, #070707), ${gradient}`,
+                    backgroundClip: 'padding-box, border-box',
+                    backgroundOrigin: 'border-box',
+
+                    color: '#ffffff',
+                    opacity: disabled ? 0.6 : 1,
+                }}
             />
+
+            {helperText && (
+                <Typography
+                    variant="caption"
+                    sx={{ color: error ? 'error.main' : 'text.secondary', mt: 0.5 }}
+                >
+                    {helperText}
+                </Typography>
+            )}
         </Box>
-    )
+    );
 }

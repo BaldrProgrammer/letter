@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -17,8 +17,16 @@ class User(Base):
     profile_photo = Column(String(30), nullable=True)
 
     # атрибуты связи
+    setting = relationship(
+        'Setting',
+        back_populates='user',
+        uselist=False
+    )
+
     chats = relationship(
-        'Chat', secondary=user_chat, back_populates='users'
+        'Chat',
+        secondary=user_chat,
+        back_populates='users'
     )
 
     def __str__(self):
@@ -42,12 +50,14 @@ class Setting(Base):
     __tablename__ = 'settings'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    for_user = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'), unique=True)
+    user = relationship('User', back_populates='setting')
+
     auth_with_password = Column(Boolean, default=False)
     language = Column(String(2), default='de')
 
     def __str__(self):
-        return f'Setting(id={self.id},for_user={self.for_user})'
+        return f'Setting(id={self.id},user_id={self.user_id})'
 
     def __repr__(self):
         return str(self)

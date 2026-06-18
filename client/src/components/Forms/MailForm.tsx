@@ -18,7 +18,7 @@ export default function MailForm() {
         if (!email || loading) return;
         const p = await post(email);
         if(p) {
-            navigation.push('/auth/verify-code')
+            navigation.push(`/auth/verify-code?email=${encodeURIComponent(email)}`);
         }
     }
 

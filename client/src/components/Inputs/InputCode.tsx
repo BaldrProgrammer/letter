@@ -5,9 +5,10 @@ import { Box, Input } from "@mui/material";
 interface CodeInputProps {
     length?: number;
     onComplete: (code: string) => void;
+    value:number,
 }
 
-export default function InputCode({ length = 4, onComplete }: CodeInputProps) {
+export default function InputCode({ length = 6, onComplete, value }: CodeInputProps) {
     const [code, setCode] = useState<string[]>(new Array(length).fill(""));
     const inputsRef = useRef<HTMLInputElement[]>([]);
 
@@ -44,7 +45,7 @@ export default function InputCode({ length = 4, onComplete }: CodeInputProps) {
                 <Input
                     key={idx}
                     inputRef={(el) => (inputsRef.current[idx] = el)}
-                    value={num}
+                    value={value}
                     onChange={(e) => handleChange(e.target.value, idx)}
                     onKeyDown={(e:any) => handleKeyDown(e, idx)}
                     slotProps={{

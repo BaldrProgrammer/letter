@@ -9,6 +9,7 @@ from alembic import context
 
 from database import get_db_url
 from users.models import User
+from users.models import Setting
 from chats.models import Chat
 
 # this is the Alembic Config object, which provides

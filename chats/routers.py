@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 
-from sqlalchemy import select
+from sqlalchemy import select, insert
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List
 
 from database import session_maker
 from chats.models import Chat
-from chats.schemas import SChatGet
+from chats.schemas import SChatAdd, SChatGet
 
 router = APIRouter(prefix='/chats', tags=['/chats'])
 
@@ -16,3 +17,16 @@ async def get_all() -> List[SChatGet]:
     async with session_maker() as session:
         result = await session.execute(stmt)
         return result.scalars().all()
+
+
+@router.post('/add')
+async def add_chat(add_data: SChatAdd) -> dict:
+    stmt = insert(Chat).values(title = add_data.title)
+    async with session_maker() as session:
+        await session.execute(stmt)
+        try:
+            await session.commit()
+            return {'ok': True}
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e

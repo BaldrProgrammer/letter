@@ -104,6 +104,6 @@ async def set_profile_photo(user_id: int):
             except SQLAlchemyError as e:
                 await session.rollback()
                 raise e
-        
+
         return {'ok': True}
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer hat kein Profilbild')

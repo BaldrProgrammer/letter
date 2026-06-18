@@ -3,7 +3,7 @@ import {Button} from "@mui/material";
 
 interface ButtonLetterProps{
     children: React.ReactNode,
-    onClick: () => void
+    onClick?: () => void
 }
 
 export default function ButtonLetter({children, onClick}:ButtonLetterProps) {

@@ -4,8 +4,23 @@ import {Input, Typography} from "@mui/material";
 import ButtonLetter from "@/components/Buttons/ButtonLertter";
 import InputLetter from "@/components/Inputs/InputLetter";
 import useMail from "@/hooks/actions/useMail";
+import {useState} from "react";
+import {useRouter} from "next/navigation";
+
 
 export default function MailForm() {
+    const {post, error,date, loading} = useMail()
+    const [email, setEmail] = useState("")
+    const navigation = useRouter()
+
+
+    const handlePost = async () => {
+        if (!email || loading) return;
+        const p = await post(email);
+        if(p) {
+            navigation.push('/auth/verify-code')
+        }
+    }
 
     return (
         <Box
@@ -28,8 +43,12 @@ export default function MailForm() {
             >
                 Mailformular
             </Typography>
-            <InputLetter id={'1'} placeholder={'ein E-Mail-Adresse'}/>
-            <ButtonLetter>
+            <InputLetter
+                id={'1'}
+                placeholder={'ein E-Mail-Adresse'}
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
+            <ButtonLetter onClick={handlePost}>
                 Code erhalten
             </ButtonLetter>
         </Box>

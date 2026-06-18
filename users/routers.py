@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request, HTTPException, status
+from fastapi import APIRouter, Request, HTTPException, status, UploadFile
 
 from sqlalchemy import select
 from typing import List, Optional
+import os
 
 from database import session_maker
 from users.auth import jwt_decode
@@ -58,3 +59,14 @@ async def get_current_user(request: Request) -> SUserGet:
                 return result
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
+
+
+@router.patch('/set_profile_photo')
+async def set_profile_photo(user_id, profile_photo: UploadFile):
+    if not (str(user_id) in os.listdir('storage')):
+        os.mkdir(f'storage/{user_id}')
+
+    newpath = f'storage/{user_id}/profile_photo.jpg'
+    with open(newpath, 'wb') as file:
+        file.write(await profile_photo.read())
+    return {'ok': True, 'newpath': newpath}

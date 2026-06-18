@@ -6,4 +6,6 @@ export interface check_code{
 export interface Reg{
     first_name: string,
     last_name:string,
+    email:string,
+    username:string
 }

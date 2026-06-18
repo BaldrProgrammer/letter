@@ -37,3 +37,9 @@ class SSettingGet(BaseModel):
     user_id: int
     auth_with_password: bool
     language: str
+
+
+class SSettingPatch(BaseModel):
+    user_id: int | None = Field(default=None, ge=1)
+    auth_with_password: bool | None = Field(default=None)
+    language: str | None = Field(default=None)

@@ -11,7 +11,7 @@ from database import session_maker
 from users.auth import jwt_decode
 from users.models import User, Setting
 from users.schemas import SUserGet, SSettingGet, SSettingPatch
-
+from chats.models import Chat
 from chats.schemas import SChatGet
 
 router = APIRouter(prefix='/users', tags=['/users'])
@@ -61,7 +61,7 @@ async def get_current_user(request: Request) -> SUserGet:
             result = result.scalars().one_or_none()
             if result:
                 return result
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
 
 
@@ -72,7 +72,7 @@ async def get_chats(user_id: int) -> SSettingGet:
         result = await session.execute(stmt)
         result = result.scalars().one_or_none()
         if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
 
         return result.setting
 
@@ -84,7 +84,7 @@ async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
         result = await session.execute(stmt)
         result = result.scalars().one_or_none()
         if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
 
         stmt = update(Setting).where(Setting.id == result.setting.id).values(**new_data.model_dump(exclude_none=True))
         await session.execute(stmt)
@@ -103,7 +103,7 @@ async def get_chats(user_id: int) -> List[SChatGet]:
         result = await session.execute(stmt)
         result = result.scalars().one_or_none()
         if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='benutzer ist nicht gefunden')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
 
     return result.chats
 

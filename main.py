@@ -3,11 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from users.routers import router as users_router
 from users.auth_routers import router as auth_router
-from models import *
+from chats.routers import router as chats_router
 
 app = FastAPI()
 app.include_router(users_router)
 app.include_router(auth_router)
+app.include_router(chats_router)
 
 app.add_middleware(
     CORSMiddleware,

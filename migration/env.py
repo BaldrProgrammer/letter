@@ -11,6 +11,7 @@ from database import get_db_url
 from users.models import User
 from users.models import Setting
 from chats.models import Chat
+from messages.models import Message
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

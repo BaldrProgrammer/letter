@@ -3,7 +3,7 @@ import InputLetter from "@/components/Inputs/InputLetter";
 
 export default function InputChat(){
     return(
-        <Box sx={{width:'80%'}}>
+        <Box sx={{width:'80%', margin:'0px auto'}}>
             <InputLetter id={'1'} placeholder={'Nachricht'}/>
         </Box>
     )

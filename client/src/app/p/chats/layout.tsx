@@ -7,9 +7,11 @@ export default function ChatLayout({
     children: React.ReactNode;
 }>) {
     return (
-       <Box sx={{height:'100vh', padding:3,}}>
+       <Box sx={{height:'100vh',width:'100wh', padding:3,display:'flex'}}>
            <NavBar/>
-           {children}
+           <Box sx={{width:'45%', margin:'0px auto'}}>
+               {children}
+           </Box>
        </Box>
     );
 }

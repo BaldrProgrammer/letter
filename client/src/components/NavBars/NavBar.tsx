@@ -4,7 +4,7 @@ import SearchBar from "@/components/NavBars/SearchBar";
 
 export default function NavBar(){
     return(
-        <Box sx={{height:'100%', borderRadius:12, width:'350px', display:'flex', flexDirection:'column', gap:2}}>
+        <Box sx={{height:'100%', width:'380px', display:'flex', flexDirection:'column', gap:2}}>
             <SearchBar/>
             <ChatsBar/>
         </Box>

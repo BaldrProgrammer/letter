@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="de" className={poppins.variable} style={{ background: '#070707' }}>
+      <html lang="de" className={poppins.variable} style={{ background: '#070707', color:'#9c9c9b' }}>
           <body>
             {children}
         </body>

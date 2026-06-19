@@ -108,6 +108,30 @@ async def get_chats(user_id: int) -> List[SChatGet]:
     return result.chats
 
 
+@router.post('/add_to_chat')
+async def get_chats(user_id: int, chat_id: int):
+    stmt_user = select(User).where(User.id == user_id).options(selectinload(User.chats))
+    stmt_chat = select(Chat).where(Chat.id == chat_id)
+    async with session_maker() as session:
+        user = await session.execute(stmt_user)
+        user = user.scalars().one_or_none()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
+
+        chat = await session.execute(stmt_chat)
+        chat = chat.scalars().one_or_none()
+        if not chat:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Chat nicht gefunden')
+
+        user.chats.append(chat)
+        try:
+            await session.commit()
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e
+
+
+
 @router.get('/get_profile_photo')
 async def get_profile_photo(user_id: int) -> FileResponse:
     if os.path.isfile(f'storage/{user_id}/profile_photo.jpg'):

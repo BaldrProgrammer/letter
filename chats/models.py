@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
+from typing import List
 from database import Base
 from associations import user_chat
 
@@ -15,6 +16,7 @@ class Chat(Base):
     users = relationship(
         'User', secondary=user_chat, back_populates='chats'
     )
+    messages = relationship('Message', back_populates='chat')
 
     def __str__(self):
         return f'Chat(id={self.id},title={self.title})'

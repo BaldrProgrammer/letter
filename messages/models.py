@@ -5,9 +5,6 @@ import uuid
 from database import Base, session_maker
 import asyncio
 
-from users.models import User
-from chats.models import Chat
-
 
 class Message(Base):
     __tablename__ = 'messages'
@@ -17,5 +14,7 @@ class Message(Base):
     is_edited = Column(Boolean, default=False)
     is_forwarded = Column(Boolean, default=False)
     sender_id = Column(Integer, ForeignKey('users.id'))
+    chat_id = Column(Integer, ForeignKey('chats.id'))
 
-    sender = relationship('User')
+    chat = relationship('Chat', back_populates='messages')
+    user = relationship('User')

@@ -1,9 +1,8 @@
-from sqlalchemy import Column, UUID, Integer, String, Boolean, ForeignKey, select
-from sqlalchemy.orm import relationship, joinedload
+from sqlalchemy import Column, UUID, Integer, String, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 import uuid
 
-from database import Base, session_maker
-import asyncio
+from database import Base
 
 
 class Message(Base):

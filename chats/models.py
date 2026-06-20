@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from typing import List
 from database import Base
 from associations import user_chat
 

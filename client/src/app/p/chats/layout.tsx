@@ -1,5 +1,6 @@
 import {Box} from "@mui/material";
 import NavBar from "@/components/NavBars/NavBar";
+import InfBlock from "@/moduls/blocks/InfBlock";
 
 export default function ChatLayout({
                                        children,
@@ -12,6 +13,7 @@ export default function ChatLayout({
            <Box sx={{width:'45%', margin:'0px auto'}}>
                {children}
            </Box>
+           <InfBlock/>
        </Box>
     );
 }

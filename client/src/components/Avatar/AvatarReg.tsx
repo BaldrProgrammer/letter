@@ -39,7 +39,6 @@ export default function AvatarReg({ onFileSelect, defaultImg = "/default-avatar.
                 cursor: 'pointer',
                 position: 'relative',
                 alignSelf: 'center',
-                mb: 3,
                 transition: 'transform 0.2s ease',
             }}
         >

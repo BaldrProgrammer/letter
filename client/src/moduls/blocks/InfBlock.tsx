@@ -1,7 +1,13 @@
+'use client'
+
 import {Box} from "@mui/material";
 import Avatar from "@/components/Avatar/Avatar";
+import {useUser} from "@/context/userContext";
 
 export default function infBlock(){
+
+    const { user, isLoading } = useUser();
+
     return(
         <Box sx={{
             height:'100%',
@@ -11,6 +17,7 @@ export default function infBlock(){
             background: 'linear-gradient(#070707, #070707) padding-box, linear-gradient(135deg, #E5E4E2, #706f6e) border-box',
         }}>
             <Avatar Img={'/'}/>
+            {`@${user?.username}`}
         </Box>
     )
 }

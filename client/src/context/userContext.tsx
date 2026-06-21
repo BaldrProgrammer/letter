@@ -1,3 +1,4 @@
+'use client'
 import React, {ReactNode, createContext, useContext, useState, useEffect} from "react";
 import {User} from "@/types/actions";
 import {URL} from "@/constant/const";
@@ -19,7 +20,7 @@ export default function userContext({children}:{children: ReactNode}){
 
     const getCur = async () => {
         try {
-            const response = await fetch(`${URL}/users/current`,{
+            const response = await fetch(`http://localhost:8000/users/current`,{
                 method: 'GET',
                 credentials: 'include'
             })

@@ -6,6 +6,8 @@ import ButtonLetter from "@/components/Buttons/ButtonLertter";
 import { useState, useEffect } from "react";
 import useReg from "@/hooks/actions/useReg";
 import { useSearchParams, useRouter } from "next/navigation";
+import AvatarReg from "@/components/Avatar/AvatarReg";
+
 
 export default function RegForm(){
     const [name, setName] = useState<string>("")
@@ -57,6 +59,8 @@ export default function RegForm(){
                 Registrierung
             </Typography>
 
+            <AvatarReg onFileSelect={()=>console.log('')}/>
+
             <InputLetter
                 id={'1'}
                 placeholder={"Vorname"}
@@ -69,7 +73,6 @@ export default function RegForm(){
                 value={lastName}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
             />
-
             <InputLetter
                 id={'3'}
                 placeholder={"@username"}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import UserContext from "@/context/userContext";
 import "./globals.css";
 
 
@@ -21,9 +22,11 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="de" className={poppins.variable} style={{ background: '#070707', color:'#9c9c9b' }}>
-          <body>
-            {children}
-        </body>
+        <UserContext>
+            <body>
+                {children}
+            </body>
+        </UserContext>
       </html>
   );
 }

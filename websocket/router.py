@@ -3,7 +3,7 @@ from fastapi import APIRouter, WebSocket
 from jose import JWTError
 from users.auth import jwt_decode
 
-from websocket.schemas import SMessageAdd
+from messages.schemas import SMessageAdd
 from websocket.utils import send_message
 
 router = APIRouter(prefix='/ws')
@@ -27,5 +27,9 @@ async def websocket(ws: WebSocket):
     while True:
         payload = await ws.receive_json()
         match payload['type']:
+            case 'close':
+                await ws.close()
+                break
+
             case 'send_message':
                 await send_message(ws, SMessageAdd(text=payload['text'], chat_id=payload['chat_id']))

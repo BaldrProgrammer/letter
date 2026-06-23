@@ -20,11 +20,11 @@ async def create_chat(ws: WebSocket, connections: dict, add_data: SChatAdd):
         new_chat = Chat(title=add_data.title, users=users)
         session.add(new_chat)
 
-        """try:
+        try:
             await session.commit()
         except SQLAlchemyError as e:
             await session.rollback()
-            raise e"""
+            raise e
 
     for user in users:
         user_socket = connections.get(user.id)

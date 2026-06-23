@@ -20,19 +20,6 @@ async def get_all() -> List[SChatGet]:
         return result.scalars().all()
 
 
-@router.post('/add')
-async def add_chat(add_data: SChatAdd) -> dict:
-    stmt = insert(Chat).values(title=add_data.title)
-    async with session_maker() as session:
-        await session.execute(stmt)
-        try:
-            await session.commit()
-            return {'ok': True}
-        except SQLAlchemyError as e:
-            await session.rollback()
-            raise e
-
-
 @router.delete('/')
 async def delete_chat(chat_id: int) -> dict:
     stmt = select(Chat).where(Chat.id == chat_id)

@@ -1,32 +1,38 @@
+"use client"; // Добавьте эту директиву в самый верх, так как MUI ThemeProvider работает на клиенте
+
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import UserContext from "@/context/userContext";
 import "./globals.css";
-
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500", "600", "700"], 
+    subsets: ["latin", "latin-ext"],
+    weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  title: "Letter Web",
-  description: "The Best",
-};
+const theme = createTheme({
+    typography: {
+        fontFamily: poppins.style.fontFamily,
+    },
+});
 
 export default function RootLayout({
-                                     children,
+                                       children,
                                    }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-      <html lang="de" className={poppins.variable} style={{ background: '#070707', color:'#9c9c9b' }}>
+    return (
+        <html lang="de" style={{ background: '#070707', color:'#9c9c9b' }}>
         <UserContext>
-            <body>
-                {children}
-            </body>
+            <ThemeProvider theme={theme}>
+                <body className={poppins.className} style={{background: '#070707'}}>
+                    <CssBaseline />
+                    {children}
+                </body>
+            </ThemeProvider>
         </UserContext>
-      </html>
-  );
+        </html>
+    );
 }

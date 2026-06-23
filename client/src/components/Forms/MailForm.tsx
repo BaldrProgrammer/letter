@@ -38,7 +38,7 @@ export default function MailForm() {
             }}
         >
             <Typography
-              sx={{color:'#9c9c9b', textAlign:'center'}}
+              sx={{color:'#9c9c9b', textAlign:'center', mb:2}}
               variant={'h4'}
             >
                 Mailformular

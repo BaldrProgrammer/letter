@@ -33,7 +33,7 @@ async def websocket(ws: WebSocket):
                 break
 
             case 'create_chat': # {"type": "create_chat", "title": "наливайкины", "users": [4, 10]}
-                await create_chat(SChatAdd(title=payload['title'], users=payload['users']))
+                await create_chat(ws, connections, SChatAdd(title=payload['title'], users=payload['users']))
 
             case 'send_message': # {"type": "send_message", "text": "привет!", "chat_id": 5}
                 await send_message(ws, SMessageAdd(text=payload['text'], chat_id=payload['chat_id']))

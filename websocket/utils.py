@@ -10,7 +10,7 @@ from chats.schemas import SChatAdd
 from messages.schemas import SMessageAdd
 
 
-async def create_chat(add_data: SChatAdd):
+async def create_chat(ws: WebSocket, connections: dict, add_data: SChatAdd):
     async with session_maker() as session:
         users = (
             await session.execute(
@@ -20,11 +20,21 @@ async def create_chat(add_data: SChatAdd):
         new_chat = Chat(title=add_data.title, users=users)
         session.add(new_chat)
 
-        try:
+        """try:
             await session.commit()
         except SQLAlchemyError as e:
             await session.rollback()
-            raise e
+            raise e"""
+
+    for user in users:
+        user_socket = connections.get(user.id)
+        if user_socket:
+            await user_socket.send_json(
+                {
+                    'type': 'create_chat',
+                    'title': new_chat.title,
+                }
+            )
 
 
 async def send_message(ws: WebSocket, message_data: SMessageAdd):

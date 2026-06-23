@@ -42,7 +42,7 @@ async def delete_chat(ws: WebSocket, connections: dict, chat_id: int):
     async with (session_maker() as session):
         stmt = select(Chat).where(Chat.id == chat_id).options(selectinload(Chat.users))
         chat = await session.execute(stmt)
-        chat = chat.scalars().one()
+        chat = chat.scalars().one_or_none()
         if not chat:
             await ws.send_json(
                 {

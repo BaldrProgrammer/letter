@@ -7,7 +7,6 @@ from database import session_maker
 from users.models import User
 from chats.models import Chat
 from chats.schemas import SChatAdd
-from messages.schemas import SMessageAdd
 
 
 async def create_chat(ws: WebSocket, connections: dict, add_data: SChatAdd):
@@ -35,7 +34,3 @@ async def create_chat(ws: WebSocket, connections: dict, add_data: SChatAdd):
                     'title': new_chat.title,
                 }
             )
-
-
-async def send_message(ws: WebSocket, message_data: SMessageAdd):
-    await ws.send_json(message_data.model_dump())

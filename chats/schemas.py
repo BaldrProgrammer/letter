@@ -11,3 +11,4 @@ class SChatAdd(BaseModel):
 class SChatGet(BaseModel):
     id: int
     title: str
+    profile_photo: str | None

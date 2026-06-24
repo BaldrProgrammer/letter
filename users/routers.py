@@ -96,16 +96,22 @@ async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
             raise e
 
 
-@router.get('/get_chats')
+@router.get('/chats')
 async def get_chats(user_id: int) -> List[SChatGet]:
-    stmt = select(User).where(User.id == user_id).options(selectinload(User.chats))
+    stmt = select(User).where(User.id == user_id).options(selectinload(User.chats).selectinload(Chat.users))
     async with session_maker() as session:
         result = await session.execute(stmt)
         result = result.scalars().one_or_none()
         if not result:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
 
-    return result.chats
+    chats = []
+    result = result.chats
+    for i, chat in enumerate(result):
+        photo = [user.profile_photo for user in chat.users if user.id != user_id]
+        chats.append(SChatGet(id=chat.id, title=chat.title, profile_photo=photo[0]))
+
+    return chats
 
 
 @router.post('/add_to_chat')

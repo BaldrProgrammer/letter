@@ -5,7 +5,8 @@ from users.auth import jwt_decode
 
 from chats.schemas import SChatAdd
 from messages.schemas import SMessageAdd
-from websocket.utils import create_chat, send_message
+from websocket.funcs.chat_funcs import create_chat, delete_chat
+from websocket.funcs.message_funcs import create_message
 
 router = APIRouter(prefix='/ws')
 
@@ -32,8 +33,11 @@ async def websocket(ws: WebSocket):
                 await ws.close()
                 break
 
-            case 'create_chat': # {"type": "create_chat", "title": "наливайкины", "users": [4, 10]}
-                await create_chat(SChatAdd(title=payload['title'], users=payload['users']))
+            case 'create_chat': # {"type": "create_chat", "title": "Chat-Name", "users": [4, 10]}
+                await create_chat(connections, SChatAdd(title=payload['title'], users=payload['users']))
 
-            case 'send_message': # {"type": "send_message", "text": "привет!", "chat_id": 5}
-                await send_message(ws, SMessageAdd(text=payload['text'], chat_id=payload['chat_id']))
+            case 'delete_chat': # {"type": "delete_chat", "chat_id": 22}
+                await delete_chat(ws, connections, payload['chat_id'])
+
+            case 'create_message': # {"type": "send_message", "text": "halo!", "chat_id": 5}
+                await create_message(ws, SMessageAdd(text=payload['text'], chat_id=payload['chat_id']))

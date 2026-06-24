@@ -25,40 +25,73 @@ export default function MailForm() {
     return (
         <Box
             sx={{
-                height: 600,
-                width: 450,
-                borderRadius: 12,
-                padding:4,
-
                 display:'flex',
-                flexDirection: 'column',
-
-                border: '1px solid transparent',
-                background: 'linear-gradient(#1E1E1EFF, #121212) padding-box, linear-gradient(135deg, #5a5a5a, #706f6e) border-box',
+                flexDirection:'column',
+                position:'relative',
             }}
         >
             <Typography
                 sx={{
                     mb:4,
                     textAlign:'center',
-                    backgroundImage: 'linear-gradient(135deg, #5a5a5a 30%, #e0e0e0 90%)',
+                    backgroundImage: 'linear-gradient(135deg, #fff 100%, #e0e0e0 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
+                    zIndex:1
                 }}
-                variant={'h4'}
+                variant={'h1'}
             >
                 Mailformular
             </Typography>
-            <Box sx={{width:'100%', height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between', py:4}}>
-                <InputLetter
-                    id={'1'}
-                    placeholder={'ein E-Mail-Adresse'}
-                    value={email}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
-                <ButtonLetter onClick={handlePost}>
-                    Code erhalten
-                </ButtonLetter>
+            <Box
+                sx={{
+                    zIndex:23,
+                    height: 280,
+                    width: 450,
+                    borderRadius: 12,
+                    padding:4,
+                    margin:'0px auto',
+                    bottom:80,
+
+                    display:'flex',
+                    flexDirection: 'column',
+
+                    border: '1px solid #b3b3b3',
+                    background: 'rgb(255 255 255 / 0,96)',
+
+                    backdropFilter: 'blur(5px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+
+                    position: 'relative',
+                    overflow: 'hidden',
+                }}
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '200px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '350px',
+                        height: '150px',
+                        zIndex: 1,
+                        background: '#b3b3b3',
+                        borderRadius:'100%',
+                        filter: 'blur(80px)',
+                    }}
+                />
+
+                <Box sx={{width:'100%', height:'100%', display:'flex', flexDirection:'column', justifyContent:'end', py:3,gap:4, zIndex:2}}>
+                    <InputLetter
+                        id={'1'}
+                        placeholder={'ein E-Mail-Adresse'}
+                        value={email}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}/>
+                    <ButtonLetter onClick={handlePost}>
+                        Code erhalten
+                    </ButtonLetter>
+                </Box>
             </Box>
         </Box>
     );

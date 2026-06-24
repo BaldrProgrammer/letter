@@ -82,7 +82,7 @@ export default function MailForm() {
                     }}
                 />
 
-                <Box sx={{width:'100%', height:'100%', display:'flex', flexDirection:'column', justifyContent:'end', py:3,gap:4, zIndex:2}}>
+                <Box sx={{width:'100%', height:'100%', display:'flex', flexDirection:'column', justifyContent:'end', py:3,gap:3, zIndex:2}}>
                     <InputLetter
                         id={'1'}
                         placeholder={'ein E-Mail-Adresse'}

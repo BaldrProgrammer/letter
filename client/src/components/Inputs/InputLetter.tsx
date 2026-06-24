@@ -53,9 +53,9 @@ export default function InputLetter({
                 style={{
                     padding: '8px 12px',
                     fontSize: '16px',
-                    height:'45px',
+                    height:'40px',
                     outline: 'none',
-                    borderRadius: '16px',
+                    borderRadius: '24px',
 
                     border: '1px solid transparent',
                     backgroundImage: `linear-gradient(#070707, #070707), ${gradient}`,

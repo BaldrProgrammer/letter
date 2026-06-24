@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, status, UploadFile, WebSocket
+from fastapi import APIRouter, Request, HTTPException, status, UploadFile, Depends
 from fastapi.responses import FileResponse
 
 from sqlalchemy import select, update
@@ -97,8 +97,8 @@ async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
 
 
 @router.get('/chats')
-async def get_chats(user_id: int) -> List[SChatGet]:
-    stmt = select(User).where(User.id == user_id).options(selectinload(User.chats).selectinload(Chat.users))
+async def get_chats(curr_user: SUserGet = Depends(get_current_user)) -> List[SChatGet]:
+    stmt = select(User).where(User.id == curr_user.id).options(selectinload(User.chats).selectinload(Chat.users))
     async with session_maker() as session:
         result = await session.execute(stmt)
         result = result.scalars().one_or_none()
@@ -108,7 +108,7 @@ async def get_chats(user_id: int) -> List[SChatGet]:
     chats = []
     result = result.chats
     for i, chat in enumerate(result):
-        photo = [user.profile_photo for user in chat.users if user.id != user_id]
+        photo = [user.profile_photo for user in chat.users if user.id != curr_user.id]
         chats.append(SChatGet(id=chat.id, title=chat.title, profile_photo=photo[0]))
 
     return chats

@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from settings import settings
 from database import session_maker
 from cache.redis_object import RedisCacheBackend
+from starlette.requests import Request
 from users.models import User, Setting
 from users.schemas import SEmail, SUserAuth, SUserReg, SUserGet
 from users.auth import jwt_encode, send_code
@@ -65,6 +66,15 @@ async def user_reg(user_data: SUserReg) -> dict:
             raise e
 
     return {'ok': True}
+
+
+
+@router.post('/logout')
+async def logout(request: Request, response: Response):
+    if request.cookies.get('access_token'):
+        response.delete_cookie('access_token')
+        return {'ok': True}
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
 
 
 @router.post('/getcookie')

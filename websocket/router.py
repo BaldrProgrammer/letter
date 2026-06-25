@@ -40,4 +40,4 @@ async def websocket(ws: WebSocket):
                 await delete_chat(ws, connections, payload['chat_id'])
 
             case 'create_message': # {"type": "create_message", "text": "halo!", "chat_id": 5}
-                await create_message(ws, SMessageAdd(text=payload['text'], chat_id=payload['chat_id'], sender_id=user_id))
+                await create_message(connections, SMessageAdd(text=payload['text'], chat_id=payload['chat_id'], sender_id=user_id))

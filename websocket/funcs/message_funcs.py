@@ -1,3 +1,5 @@
+import datetime
+
 from fastapi import WebSocket
 
 from database import session_maker
@@ -38,7 +40,7 @@ async def create_message(connections: dict, message_data: SMessageAdd):
                         'text': new_message.text,
                         'chat_id': new_message.chat_id,
                         'sender_id': new_message.sender_id,
-                        'date': str(new_message.created_at)
+                        'date': str(datetime.datetime.now(datetime.timezone.utc))
                     }
                 )
 

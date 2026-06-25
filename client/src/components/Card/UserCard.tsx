@@ -1,5 +1,6 @@
 import {Box} from "@mui/material";
 import {User} from "@/types/actions";
+import ButtonLertter from "@/components/Buttons/ButtonLertter";
 
 interface UserCArdProps{
     first_name:string,
@@ -10,7 +11,11 @@ interface UserCArdProps{
 
 export default function UserCard({first_name, last_name, username}:UserCArdProps){
     return(
-        <Box>
+        <Box
+            sx={{
+                color:'red'
+            }}
+        >
             {first_name}
             <br/>
             {last_name}

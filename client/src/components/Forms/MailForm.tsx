@@ -74,7 +74,7 @@ export default function MailForm() {
                         left: '50%',
                         transform: 'translateX(-50%)',
                         width: '350px',
-                        height: '150px',
+                        height: '80px',
                         zIndex: 1,
                         background: '#b3b3b3',
                         borderRadius:'100%',

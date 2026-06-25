@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 
 class SMessageAdd(BaseModel):
@@ -8,7 +9,7 @@ class SMessageAdd(BaseModel):
 
 
 class SMessageGet(BaseModel):
-    id: int = Field(ge=1)
+    id: UUID = Field(...)
     text: str = Field(min_length=1, max_length=8192)
     is_edited: bool = Field(...)
     is_forwarded: bool = Field(...)

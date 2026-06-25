@@ -1,22 +1,22 @@
 'use client'
 import React, {ReactNode, createContext, useContext, useState, useEffect} from "react";
 import {User} from "@/types/actions";
-import {URL} from "@/constant/const";
-
+import {useRouter} from "next/navigation";
 
 interface UserContext{
     user: User | null,
     isLoading: boolean;
     setUser: (user: User | null) => void;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContext | undefined>(undefined)
 
-
 export default function userContext({children}:{children: ReactNode}){
     const [user, setUser] = useState<User | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    const router = useRouter()
 
     const getCur = async () => {
         try {
@@ -28,11 +28,12 @@ export default function userContext({children}:{children: ReactNode}){
                 setUser(await response.json())
             } else {
                 setUser(null)
-                setIsLoading(false)
+                router.push('/auth');
             }
         }catch (err:any){
             console.error(err)
-            setIsLoading(false)
+            setUser(null)
+            router.push('/auth');
         }finally {
             setIsLoading(false)
         }
@@ -42,8 +43,17 @@ export default function userContext({children}:{children: ReactNode}){
         getCur()
     }, [])
 
-    const logout = () =>{
-        setUser(null)
+    const logout = async () => {
+        try {
+            await fetch(`http://localhost:8000/auth/logout`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+        } catch (err) {
+            console.error("Ошибка при логауте на бэкенде:", err);
+        } finally {
+            setUser(null);
+        }
     }
 
     return(

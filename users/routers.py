@@ -108,8 +108,9 @@ async def get_chats(curr_user: SUserGet = Depends(get_current_user)) -> List[SCh
     chats = []
     result = result.chats
     for i, chat in enumerate(result):
+        title = [user.first_name+' '+user.last_name for user in chat.users if user.id != curr_user.id]
         photo = [user.profile_photo for user in chat.users if user.id != curr_user.id]
-        chats.append(SChatGet(id=chat.id, title=chat.title, profile_photo=photo[0]))
+        chats.append(SChatGet(id=chat.id, title=title[0], profile_photo=photo[0]))
 
     return chats
 

@@ -14,6 +14,7 @@ export default function useVerifyCode() {
                 headers:{
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body:JSON.stringify({
                     email:data.email,
                     code:data.code,

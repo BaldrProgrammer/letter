@@ -47,7 +47,7 @@ export default function MailForm() {
             <Box
                 sx={{
                     zIndex:23,
-                    height: 280,
+                    height: 220,
                     width: 450,
                     borderRadius: 12,
                     padding:4,

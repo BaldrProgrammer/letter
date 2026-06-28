@@ -1,7 +1,8 @@
 'use client'
 import React, {ReactNode, createContext, useContext, useState, useEffect} from "react";
 import {User} from "@/types/actions";
-import {useRouter} from "next/navigation";
+import {useRouter, usePathname} from "next/navigation";
+import {URL} from "@/constant/const";
 
 interface UserContext{
     user: User | null,
@@ -17,35 +18,43 @@ export default function userContext({children}:{children: ReactNode}){
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const router = useRouter()
+    const pathname = usePathname()
 
     const getCur = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/users/current`,{
+            const response = await fetch(`${URL}/users/current`,{
                 method: 'GET',
-                credentials: 'include'
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+
             })
             if (response.ok) {
                 setUser(await response.json())
             } else {
                 setUser(null)
-                router.push('/auth');
+
             }
         }catch (err:any){
             console.error(err)
             setUser(null)
-            router.push('/auth');
         }finally {
             setIsLoading(false)
         }
     }
 
-    useEffect(()=>{
-        getCur()
-    }, [])
+    useEffect(() => {
+        if (pathname?.startsWith('/p')) {
+            getCur();
+        } else {
+            setIsLoading(false);
+        }
+    }, [pathname])
 
     const logout = async () => {
         try {
-            await fetch(`http://localhost:8000/auth/logout`, {
+            await fetch(`${URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -53,6 +62,7 @@ export default function userContext({children}:{children: ReactNode}){
             console.error("Ошибка при логауте на бэкенде:", err);
         } finally {
             setUser(null);
+            router.push('/auth');
         }
     }
 

@@ -16,6 +16,7 @@ export default function useMail(){
                 headers:{
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body:JSON.stringify({email:data})
             })
 

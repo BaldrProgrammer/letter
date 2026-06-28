@@ -14,6 +14,7 @@ export default function useReg() {
                 headers:{
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body:JSON.stringify({
                     first_name: data.first_name,
                     last_name:data.last_name,

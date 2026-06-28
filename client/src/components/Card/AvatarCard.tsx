@@ -1,9 +1,14 @@
 import Avatar from "@/components/Avatar/Avatar";
+import {Box} from "@mui/material";
 
-export default function AvatarCard(){
+interface AvatarCardProps{
+    Image: string | null
+}
+
+export default function AvatarCard({Image}:AvatarCardProps){
     return(
-        <>
-            <Avatar Img={'/'}/>
-        </>
+        <Box sx={{width:'100%', height:'150px', display:'flex', alignItems:'center', justifyContent:'center'}}>
+            <Avatar Img={Image}/>
+        </Box>
     )
 }

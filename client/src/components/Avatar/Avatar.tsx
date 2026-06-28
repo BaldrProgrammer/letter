@@ -8,8 +8,8 @@ interface AvatarProps{
 export default function Avatar({Img}:AvatarProps){
     return(
         <Box sx={{
-            width:'100px',
-            height:'100px',
+            width:'80px',
+            height:'80px',
             borderRadius:'100%',
             border: '1px solid transparent',
             background: 'linear-gradient(#070707, #070707) padding-box, linear-gradient(135deg, #E5E4E2, #706f6e) border-box'

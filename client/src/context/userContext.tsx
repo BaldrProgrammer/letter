@@ -59,7 +59,8 @@ export default function userContext({children}:{children: ReactNode}){
                 credentials: 'include'
             });
         } catch (err) {
-            console.error("Ошибка при логауте на бэкенде:", err);
+            console.error("\n" +
+                "Fehler beim Backend-Logout:", err);
         } finally {
             setUser(null);
             router.push('/auth');

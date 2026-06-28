@@ -13,7 +13,7 @@ export default function UserCard({first_name, last_name, username}:UserCArdProps
     return(
         <Box
             sx={{
-                color:'red'
+                color:'white'
             }}
         >
             {first_name}

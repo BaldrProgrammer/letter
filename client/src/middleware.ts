@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
+import {URL_SER} from "@/constant/const";
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    if (pathname.startsWith(`http://127.0.0.1:8000`)) {
+    if (pathname.startsWith(`${URL_SER}`)) {
         return NextResponse.next();
     }
     const hasAuthCookie = request.cookies.has('access_token');
@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
 
 
     if (hasAuthCookie && isAuthPage) {
-        return NextResponse.redirect(new URL('/p/chats', request.url)); // Замените '/dashboard' на ваш приватный роут (например, '/profile')
+        return NextResponse.redirect(new URL('/p/chats', request.url));
     }
 
     return NextResponse.next();

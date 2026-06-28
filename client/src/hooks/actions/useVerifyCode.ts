@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {URL} from "@/constant/const";
+import {URL_SER} from "@/constant/const";
 import {check_code} from "@/types/actions";
 
 export default function useVerifyCode() {
@@ -9,7 +9,7 @@ export default function useVerifyCode() {
     const post = async (data:check_code) => {
         setLoading(true)
         try{
-            const response = await fetch(`${URL}/auth/check_code`, {
+            const response = await fetch(`${URL_SER}/auth/check_code`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',

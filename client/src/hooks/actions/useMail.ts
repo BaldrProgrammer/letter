@@ -1,4 +1,4 @@
-import {URL} from "@/constant/const";
+import {URL_SER} from "@/constant/const";
 import {useState} from "react";
 
 
@@ -11,7 +11,7 @@ export default function useMail(){
         setLoading(true)
 
         try{
-            const response = await fetch(`${URL}/auth/send_code`, {
+            const response = await fetch(`${URL_SER}/auth/send_code`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',

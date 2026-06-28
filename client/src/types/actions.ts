@@ -19,3 +19,13 @@ export interface User{
     username:string,
     fileUrl?: string
 }
+
+export interface UserF{
+    id:number,
+    first_name: string,
+    last_name:string,
+    email:string,
+    username:string,
+    password:string | null,
+    fileUrl?: string | null
+}

@@ -2,7 +2,7 @@
 import React, {ReactNode, createContext, useContext, useState, useEffect} from "react";
 import {User} from "@/types/actions";
 import {useRouter, usePathname} from "next/navigation";
-import {URL} from "@/constant/const";
+import {URL_SER} from "@/constant/const";
 
 interface UserContext{
     user: User | null,
@@ -22,7 +22,7 @@ export default function userContext({children}:{children: ReactNode}){
 
     const getCur = async () => {
         try {
-            const response = await fetch(`${URL}/users/current`,{
+            const response = await fetch(`${URL_SER}/users/current`,{
                 method: 'GET',
                 credentials: 'include',
                 headers: {

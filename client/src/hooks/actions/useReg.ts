@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {URL} from "@/constant/const";
+import {URL_SER} from "@/constant/const";
 import {Reg} from "@/types/actions";
 
 export default function useReg() {
@@ -9,7 +9,7 @@ export default function useReg() {
     const post = async (data:Reg) => {
         setLoading(true)
         try{
-            const response = await fetch(`${URL}/auth/reg`, {
+            const response = await fetch(`${URL_SER}/auth/reg`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json',

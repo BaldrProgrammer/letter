@@ -65,6 +65,33 @@ async def get_current_user(request: Request) -> SUserGet:
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
 
 
+@router.get('/chats')
+async def get_chats(curr_user: SUserGet = Depends(get_current_user)) -> List[SChatGet]:
+    stmt = select(User).where(User.id == curr_user.id).options(selectinload(User.chats).selectinload(Chat.users))
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        result = result.scalars().one_or_none()
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
+
+    chats = []
+    result = result.chats
+    for i, chat in enumerate(result):
+        title = [user.first_name + ' ' + user.last_name for user in chat.users if user.id != curr_user.id]
+        photo = [user.profile_photo for user in chat.users if user.id != curr_user.id]
+        chats.append(SChatGet(id=chat.id, title=title[0], profile_photo=photo[0]))
+
+    return chats
+
+
+@router.get('/get_profile_photo')
+async def get_profile_photo(user_id: int) -> FileResponse:
+    if os.path.isfile(f'storage/{user_id}/profile_photo.jpg'):
+        return FileResponse(path=f'storage/{user_id}/profile_photo.jpg', media_type='image/jpg')
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer hat kein Profilbild')
+
+
 @router.get('/get_settings')
 async def get_chats(user_id: int) -> SSettingGet:
     stmt = select(User).where(User.id == user_id).options(joinedload(User.setting))
@@ -94,93 +121,3 @@ async def get_chats(user_id: int, new_data: SSettingPatch) -> dict:
         except SQLAlchemyError as e:
             await session.rollback()
             raise e
-
-
-@router.get('/chats')
-async def get_chats(curr_user: SUserGet = Depends(get_current_user)) -> List[SChatGet]:
-    stmt = select(User).where(User.id == curr_user.id).options(selectinload(User.chats).selectinload(Chat.users))
-    async with session_maker() as session:
-        result = await session.execute(stmt)
-        result = result.scalars().one_or_none()
-        if not result:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
-
-    chats = []
-    result = result.chats
-    for i, chat in enumerate(result):
-        title = [user.first_name+' '+user.last_name for user in chat.users if user.id != curr_user.id]
-        photo = [user.profile_photo for user in chat.users if user.id != curr_user.id]
-        chats.append(SChatGet(id=chat.id, title=title[0], profile_photo=photo[0]))
-
-    return chats
-
-
-@router.post('/add_to_chat')
-async def get_chats(user_id: int, chat_id: int):
-    stmt_user = select(User).where(User.id == user_id).options(selectinload(User.chats))
-    stmt_chat = select(Chat).where(Chat.id == chat_id)
-    async with session_maker() as session:
-        user = await session.execute(stmt_user)
-        user = user.scalars().one_or_none()
-        if not user:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer nicht gefunden')
-
-        chat = await session.execute(stmt_chat)
-        chat = chat.scalars().one_or_none()
-        if not chat:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Chat nicht gefunden')
-
-        user.chats.append(chat)
-        try:
-            await session.commit()
-        except SQLAlchemyError as e:
-            await session.rollback()
-            raise e
-
-
-
-@router.get('/get_profile_photo')
-async def get_profile_photo(user_id: int) -> FileResponse:
-    if os.path.isfile(f'storage/{user_id}/profile_photo.jpg'):
-        return FileResponse(path=f'storage/{user_id}/profile_photo.jpg', media_type='image/jpg')
-
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer hat kein Profilbild')
-
-
-@router.patch('/set_profile_photo')
-async def set_profile_photo(user_id: int, profile_photo: UploadFile):
-    if not (str(user_id) in os.listdir('storage')):
-        os.mkdir(f'storage/{user_id}')
-
-    newpath = f'storage/{user_id}/profile_photo.jpg'
-    with open(newpath, 'wb') as file:
-        file.write(await profile_photo.read())
-
-    stmt = update(User).where(User.id == user_id).values(profile_photo=newpath)
-    async with session_maker() as session:
-        await session.execute(stmt)
-        try:
-            await session.commit()
-        except SQLAlchemyError as e:
-            await session.rollback()
-            raise e
-
-    return {'ok': True, 'newpath': newpath}
-
-
-@router.delete('/delete_profile_photo')
-async def set_profile_photo(user_id: int):
-    if os.path.isfile(f'storage/{user_id}/profile_photo.jpg'):
-        os.remove(f'storage/{user_id}/profile_photo.jpg')
-
-        stmt = update(User).where(User.id == user_id).values(profile_photo=None)
-        async with session_maker() as session:
-            await session.execute(stmt)
-            try:
-                await session.commit()
-            except SQLAlchemyError as e:
-                await session.rollback()
-                raise e
-
-        return {'ok': True}
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Benutzer hat kein Profilbild')

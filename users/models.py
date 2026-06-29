@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -15,6 +15,8 @@ class User(Base):
     username = Column(String(24), nullable=False, unique=True)
     password = Column(String(60), nullable=True)
     profile_photo = Column(String(30), nullable=True)
+    online = Column(Boolean, default=False)
+    last_online = Column(DateTime)
 
     # атрибуты связи
     setting = relationship(

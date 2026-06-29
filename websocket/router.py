@@ -1,4 +1,4 @@
-from fastapi import APIRouter, WebSocket
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from jose import JWTError
 from users.auth import jwt_decode
@@ -7,6 +7,7 @@ from chats.schemas import SChatAdd
 from messages.schemas import SMessageAdd
 from websocket.funcs.chat_funcs import create_chat, delete_chat
 from websocket.funcs.message_funcs import create_message
+from websocket.funcs.user_funcs import enter_online, exit_online
 
 router = APIRouter(prefix='/ws')
 
@@ -25,19 +26,26 @@ async def websocket(ws: WebSocket):
         raise ws.close(code=1008, reason='der Token ist fehlerhaft')
 
     await ws.accept()
+    await enter_online(user_id)
     connections[user_id] = ws
-    while True:
-        payload = await ws.receive_json()
-        match payload['type']:
-            case 'close':
-                await ws.close()
-                break
+    try:
+        while True:
+            payload = await ws.receive_json()
+            match payload['type']:
+                case 'close':
+                    await ws.close()
+                    break
 
-            case 'create_chat': # {"type": "create_chat", "users": [4, 10]}
-                await create_chat(connections, SChatAdd(users=payload['users']))
+                case 'create_chat': # {"type": "create_chat", "users": [4, 10]}
+                    await create_chat(connections, SChatAdd(users=payload['users']))
 
-            case 'delete_chat': # {"type": "delete_chat", "chat_id": 22}
-                await delete_chat(ws, connections, payload['chat_id'])
+                case 'delete_chat': # {"type": "delete_chat", "chat_id": 22}
+                    await delete_chat(ws, connections, payload['chat_id'])
 
-            case 'create_message': # {"type": "create_message", "text": "halo!", "chat_id": 5}
-                await create_message(connections, SMessageAdd(text=payload['text'], chat_id=payload['chat_id'], sender_id=user_id))
+                case 'create_message': # {"type": "create_message", "text": "halo!", "chat_id": 5}
+                    await create_message(connections, SMessageAdd(text=payload['text'], chat_id=payload['chat_id'], sender_id=user_id))
+    except WebSocketDisconnect:
+        pass
+
+    finally:
+        await exit_online(user_id)

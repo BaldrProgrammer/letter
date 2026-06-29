@@ -16,7 +16,7 @@ class User(Base):
     password = Column(String(60), nullable=True)
     profile_photo = Column(String(30), nullable=True)
     online = Column(Boolean, default=False)
-    last_online = Column(DateTime)
+    last_online = Column(DateTime(timezone=True))
 
     # атрибуты связи
     setting = relationship(

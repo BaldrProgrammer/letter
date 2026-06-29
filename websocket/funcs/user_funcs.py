@@ -1,4 +1,4 @@
-from sqlalchemy import update
+from sqlalchemy import update, DateTime
 from sqlalchemy.exc import SQLAlchemyError
 from database import session_maker
 
@@ -9,6 +9,7 @@ from users.models import User
 
 async def enter_online(user_id):
     stmt = update(User).where(User.id == user_id).values(online = True, last_online = datetime.now(timezone.utc))
+    print(datetime.now(timezone.utc))
     async with session_maker() as session:
         await session.execute(stmt)
         try:

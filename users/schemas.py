@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 
+from datetime import datetime
+
 
 class SEmail(BaseModel):
     email: str = Field(pattern='^[a-zA-Z0-9._%+-]+@gmail\\.com$')
@@ -27,6 +29,8 @@ class SUserGet(BaseModel):
     username: str
     password: str | None
     profile_photo: str | None
+    online: bool
+    last_online: datetime
 
     class Config:
         from_attributes = True

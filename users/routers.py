@@ -65,6 +65,14 @@ async def get_current_user(request: Request) -> SUserGet:
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='auth cookies fehlen')
 
 
+@router.get('/online')
+async def get_online_status(curr_user: SUserGet = Depends(get_current_user)) -> tuple:
+    stmt = select(User.online, User.last_online).where(User.id == curr_user.id)
+    async with session_maker() as session:
+        result = await session.execute(stmt)
+        return result.one()
+
+
 @router.get('/chats')
 async def get_chats(curr_user: SUserGet = Depends(get_current_user)) -> List[SChatGet]:
     stmt = select(User).where(User.id == curr_user.id).options(selectinload(User.chats).selectinload(Chat.users))

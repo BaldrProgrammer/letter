@@ -16,3 +16,14 @@ async def enter_online(user_id):
         except SQLAlchemyError as e:
             await session.rollback()
             raise e
+
+
+async def exit_online(user_id):
+    stmt = update(User).where(User.id == user_id).values(online = False, last_online = datetime.now(timezone.utc))
+    async with session_maker() as session:
+        await session.execute(stmt)
+        try:
+            await session.commit()
+        except SQLAlchemyError as e:
+            await session.rollback()
+            raise e

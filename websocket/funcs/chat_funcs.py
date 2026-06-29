@@ -27,7 +27,6 @@ async def create_chat(connections: dict, add_data: SChatAdd):
                     {
                         'type': 'create_chat',
                         'chat_id': new_chat.id,
-                        'title': new_chat.title,
                     }
                 )
 

@@ -142,3 +142,21 @@ async def set_profile_photo(user_id: int, profile_photo: UploadFile):
             raise e
 
     return {'ok': True, 'newpath': newpath}
+
+
+@router.delete('/delete_profile_photo')
+async def set_profile_photo(user_id: int):
+    if os.path.isfile(f'storage/{user_id}/profile_photo.jpg'):
+        os.remove(f'storage/{user_id}/profile_photo.jpg')
+
+        stmt = update(User).where(User.id == user_id).values(profile_photo=None)
+        async with session_maker() as session:
+            await session.execute(stmt)
+            try:
+                await session.commit()
+            except SQLAlchemyError as e:
+                await session.rollback()
+                raise e
+
+        return {'ok': True}
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='der Profilbild ist nicht gefunden')

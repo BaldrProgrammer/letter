@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Response, status, HTTPException
 
 from sqlalchemy import select, insert
@@ -50,7 +52,9 @@ async def user_reg(user_data: SUserReg) -> dict:
                                last_name=user_data.last_name,
                                email=user_data.email,
                                username=user_data.username,
-                               password=user_data.password).returning(User)
+                               password=user_data.password,
+                               online=False,
+                               last_online=datetime.now(timezone.utc)).returning(User)
     async with session_maker() as session:
         result = await session.execute(stmt)
         new_settings = Setting(

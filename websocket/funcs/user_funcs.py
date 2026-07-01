@@ -8,7 +8,7 @@ from users.models import User
 
 
 async def enter_online(user_id):
-    stmt = update(User).where(User.id == user_id).values(online = True, last_online = datetime.now(timezone.utc))
+    stmt = update(User).where(User.id == user_id).values(online=True, last_online=datetime.now(timezone.utc))
     async with session_maker() as session:
         await session.execute(stmt)
         try:
@@ -19,7 +19,7 @@ async def enter_online(user_id):
 
 
 async def exit_online(user_id):
-    stmt = update(User).where(User.id == user_id).values(online = False, last_online = datetime.now(timezone.utc))
+    stmt = update(User).where(User.id == user_id).values(online=False, last_online=datetime.now(timezone.utc))
     async with session_maker() as session:
         await session.execute(stmt)
         try:
